@@ -4,30 +4,31 @@
   date          : 2024/10/27
   Description   : 获得卷积后的图像
 """
+import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 
-from tools import *
+from tools import apply_threshold, conv_with_core, gaussian_kernel, laplace_core, median_filter, relu
 
 image = Image.open('../resources/test3_3.jpg')
 
 r, g, b = image.split()
 r_array = np.array(r)
 
-# 直接卷积
-conv_array = conv_with_core(r_array, laplace_core)
+# 阈值去噪
+conv_array = apply_threshold(r_array, 100)
 
 # 中值去噪
 conv_array = median_filter(conv_array, 3)
 
+# 高斯滤波
+conv_array = conv_with_core(conv_array, gaussian_kernel(5, 1))
+
+# 拉普拉斯算子
+conv_array = conv_with_core(conv_array, laplace_core)
+
 # 激活函数
 conv_array = relu(conv_array)
-
-# 阈值去噪
-conv_array = conv_with_core(conv_array, gaussian_kernel(3, 3), pad=True)
-conv_array = apply_threshold(conv_array, 100)
-
-# conv_array = sigmoid(conv_array)
 
 fig, ax = plt.subplots(1, 2, figsize=(10, 10))
 
