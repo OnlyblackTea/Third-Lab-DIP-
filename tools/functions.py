@@ -95,3 +95,26 @@ def T_linear(r, a, b, c, d):
     :return s: 变换后的像素值
     """
     return ((d - c) / (b - a)) * (r - a) + c
+
+def gaussian_kernel(size, sigma):
+    """生成高斯核"""
+    kernel = np.zeros((size, size))
+    mean = size // 2
+    sum_val = 0.0
+
+    for x in range(size):
+        for y in range(size):
+            kernel[x, y] = (1 / (2 * np.pi * sigma**2)) * \
+                           np.exp(-((x - mean) ** 2 + (y - mean) ** 2) / (2 * sigma ** 2))
+            sum_val += kernel[x, y]
+
+    # 归一化
+    kernel /= sum_val
+    return kernel
+
+
+
+def gaussian_filter(image, kernel_size=5, sigma=1.0):
+    """对图像应用高斯滤波"""
+    kernel = gaussian_kernel(kernel_size, sigma)
+    return conv_with_core(image, kernel)

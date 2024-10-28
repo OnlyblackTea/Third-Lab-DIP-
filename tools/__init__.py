@@ -10,3 +10,4 @@ from .functions import conv_with_core, median_filter
 from .functions import sigmoid, relu, tanh
 from .functions import apply_threshold
 from .functions import T_log, T_reverse, T_linear
+from .functions import gaussian_filter, gaussian_kernel
